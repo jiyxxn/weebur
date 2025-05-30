@@ -8,7 +8,7 @@ type StoredViewType = {
   at: number;
 };
 
-const getViewPref = (): ViewType => {
+export const getViewPref = (): ViewType => {
   if (typeof window === 'undefined') return 'list';
   const raw = localStorage.getItem(STORAGE_KEY);
 
