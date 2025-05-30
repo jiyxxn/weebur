@@ -3,14 +3,22 @@ export type Product = {
   title: string;
   thumbnail: string;
   description: string;
-  reviews: number;
+  reviews: Review[];
   rating: number;
 };
 
 export type AddProductRequestBody = {
   title: string;
-  description: string;
+  description?: string;
   price: number;
   discountPercentage?: number;
   brand: 'Apple' | 'Samsung' | 'Weebur';
+};
+
+type Review = {
+  rating: number;
+  comment: string;
+  date: string;
+  reviewerName: string;
+  reviewerEmail: string;
 };
