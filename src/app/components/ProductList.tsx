@@ -1,12 +1,12 @@
 import { Product } from '@/types/product';
 import ProductCard from './ProductCard';
 
-const ProductList = ({ products }: { products: Product[] }) => {
+const ProductList = ({ items }: { items: Product[] }) => {
   return (
-    <ul>
-      {products.map((product) => (
-        <li>
-          <ProductCard key={product.id} product={product} />
+    <ul className="flex flex-col gap-6">
+      {items.map((product) => (
+        <li key={product.id}>
+          <ProductCard product={product} />
         </li>
       ))}
     </ul>

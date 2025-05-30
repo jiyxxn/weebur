@@ -2,13 +2,13 @@ import { Product } from '@/types/product';
 
 const ProductCard = ({ product }: { product: Product }) => {
   return (
-    <article>
+    <article className="p-4 border-2 border-gray-300 rounded-lg space-y-2">
       <img src={product.thumbnail} alt={product.title} />
-      <h3>{product.title}</h3>
-      <div>
-        <p>{product.description}</p>
-        <p>{product.rating}</p>
-        <p>{product.reviews}</p>
+      <h3>상품명 : {product.title}</h3>
+      <div className="space-y-2">
+        <p>상품 설명 : {product.description}</p>
+        <p>별점 : {product.rating}</p>
+        <p>리뷰 수 : {product.reviews.length}</p>
       </div>
     </article>
   );
