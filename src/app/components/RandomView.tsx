@@ -1,4 +1,4 @@
-import { getViewPref } from '@/lib/viewPref';
+import { useViewType } from '@/hooks/useViewType';
 import { ReactNode } from 'react';
 
 type RandomViewProps = {
@@ -7,7 +7,7 @@ type RandomViewProps = {
 };
 
 const RandomView = ({ list, grid }: RandomViewProps) => {
-  const viewType = getViewPref();
+  const viewType = useViewType();
 
   if (viewType === 'grid') return grid;
   return list;

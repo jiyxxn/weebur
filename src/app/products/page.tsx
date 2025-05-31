@@ -1,6 +1,6 @@
 'use client';
 
-import { useProducts } from '@/hooks/useProducts';
+import { useGetProducts } from '@/hooks/useProducts';
 import { useRouter } from 'next/navigation';
 import RandomView from '../components/RandomView';
 import ProductList from '../components/ProductList';
@@ -8,7 +8,7 @@ import ProductGrid from '../components/ProductGrid';
 
 const ProductListPage = () => {
   const router = useRouter();
-  const { data: products, isLoading, error } = useProducts(20);
+  const { data: products, isLoading, error } = useGetProducts(20);
 
   if (isLoading) return <div>로딩중 ...</div>;
   if (error || !products) return <div>에러 발생</div>;
