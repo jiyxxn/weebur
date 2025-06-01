@@ -20,7 +20,7 @@ export const viewPrefService = {
   },
   reset(): ViewType {
     const viewType = Math.random() < 0.5 ? 'list' : 'grid';
-    local.set(STORAGE_KEY, { viewType, at: Date.now() });
+    local.set(STORAGE_KEY, { type: viewType, at: Date.now() });
     return viewType;
   },
 };
