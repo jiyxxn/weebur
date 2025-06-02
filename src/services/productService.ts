@@ -1,15 +1,15 @@
-import { AddProductRequestBody, Product } from '@/types/product';
+import { AddProductRequestBody, Products } from '@/types/product';
 
 const BASE_URL = 'https://dummyjson.com';
 
 export const productService = {
-  async get(limit: number = 20): Promise<Product[]> {
+  async get(limit: number = 20): Promise<Products> {
     const res = await fetch(`${BASE_URL}/products?limit=${limit}`);
     if (!res.ok) throw new Error('상품 로드 실패');
     const data = await res.json();
     return data.products;
   },
-  async add(product: AddProductRequestBody): Promise<Product[]> {
+  async add(product: AddProductRequestBody): Promise<Products> {
     const res = await fetch(`${BASE_URL}/products/add`, {
       method: 'POST',
       headers: {

@@ -1,7 +1,11 @@
-import { Product } from '@/types/product';
+import { Products } from '@/types/product';
 import ProductCard from './ProductCard';
 
-const ProductList = ({ items }: { items: Product[] }) => {
+type ProductListProps = {
+  items: Products;
+};
+
+const ProductList = ({ items }: ProductListProps) => {
   return (
     <ul className="flex flex-col gap-6">
       {items.map((product) => (

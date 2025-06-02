@@ -1,7 +1,11 @@
-import { Product } from '@/types/product';
+import { Products } from '@/types/product';
 import ProductCard from './ProductCard';
 
-const ProductGrid = ({ items }: { items: Product[] }) => {
+type ProductGridProps = {
+  items: Products;
+};
+
+const ProductGrid = ({ items }: ProductGridProps) => {
   return (
     <div className="grid grid-cols-4 gap-6">
       {items.map((product) => (
