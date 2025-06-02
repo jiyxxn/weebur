@@ -3,8 +3,6 @@
 import { useGetProducts } from '@/hooks/useProducts';
 import { useRouter } from 'next/navigation';
 import RandomView from '../components/RandomView';
-import ProductList from '../components/ProductList';
-import ProductGrid from '../components/ProductGrid';
 
 const ProductListPage = () => {
   const router = useRouter();
@@ -21,11 +19,7 @@ const ProductListPage = () => {
         className="p-4 bg-neutral-700 text-white rounded-full mb-8 ">
         상품 등록 바로가기
       </button>
-
-      <RandomView
-        list={<ProductList items={products} />}
-        grid={<ProductGrid items={products} />}
-      />
+      <RandomView items={products} />
     </section>
   );
 };

@@ -1,16 +1,26 @@
+import { Products } from '@/types/product';
+import SwitchCase from './SwitchCase';
 import { useViewType } from '@/hooks/useViewType';
-import { ReactNode } from 'react';
+import ProductList from './ProductList';
+import ProductGrid from './ProductGrid';
 
 type RandomViewProps = {
-  list: ReactNode;
-  grid: ReactNode;
+  items: Products;
 };
 
-const RandomView = ({ list, grid }: RandomViewProps) => {
+const RandomView = ({ items }: RandomViewProps) => {
   const viewType = useViewType();
 
-  if (viewType === 'grid') return grid;
-  return list;
+  return (
+    <SwitchCase
+      value={viewType}
+      cases={{
+        list: <ProductList items={items} />,
+        grid: <ProductGrid items={items} />,
+      }}
+      default={<ProductList items={items} />}
+    />
+  );
 };
 
 export default RandomView;
