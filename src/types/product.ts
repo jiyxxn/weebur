@@ -7,6 +7,8 @@ export type Product = {
   rating: number;
 };
 
+export type Products = Product[];
+
 export type AddProductRequestBody = {
   title: string;
   description?: string;
