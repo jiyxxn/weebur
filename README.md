@@ -226,6 +226,144 @@ local.get() / local.set()
 위와 같은 구조 변경을 통해 코드의 가독성과 유지보수성을 높이고,
 <br>향후 기능 확장 시에도 기존 코드에 미치는 영향을 최소화할 수 있었습니다.
 
+<br>
+
+
+---
+
+<br>
+
+### 🔄 조건부 렌더링의 확장성을 고려한 SwitchCase 컴포넌트 리팩토링
+#### 문제 상황
+초기 `RandomView` 컴포넌트는 단순한 이분법적 조건부 렌더링으로 구성되어 있었습니다.
+
+```tsx
+// Before: 제한적인 조건부 렌더링
+const RandomView = ({ list, grid }: RandomViewProps) => {
+  const viewType = useViewType();
+  if (viewType === 'grid') return grid;
+  return list;
+};
+```
+하지만 이런 구조는 다음과 같은 한계점을 가지고 있었습니다.
+- 확장성 부족 : 새로운 뷰 타입 추가 시 컴포넌트 전체 수정 필요
+- AB 테스팅 제약 : 복잡한 조건부 로직 처리 어려움
+- 피처 플래그 대응 한계 : 다중 조건 처리 시 코드 복잡도 급증
+- 재사용성 부족 : 다른 조건부 렌더링 상황에서 활용 불가
+
+<br>
+
+#### 리팩토링 과정 및 설계 철학
+**1단계 : 제네릭 기반 추상화**
+```tsx
+// After: 제네릭을 활용한 확장 가능한 SwitchCase
+type Key = string | number | symbol;
+
+type SwitchCaseProps<Case extends Key> = {
+  value: Case;
+  cases: Partial<Record<Case, ReactElement>>;
+  default?: ReactElement;
+};
+
+const SwitchCase = <Case extends Key>(props: SwitchCaseProps<Case>) => {
+  return props.cases[props.value] ?? props.default ?? null;
+};
+```
+
+<br>
+
+**2단계 : 선언적 조건부 렌더링 구현**
+```tsx
+// 기존 명령형 스타일에서 선언적 스타일로 전환
+const RandomView = ({ items }: RandomViewProps) => {
+  const viewType = useViewType();
+
+  return (
+    <SwitchCase
+      value={viewType}
+      cases={{
+        list: <ProductList items={items} />,
+        grid: <ProductGrid items={items} />,
+      }}
+      default={<ProductList items={items} />}
+    />
+  );
+};
+```
+
+<br>
+
+#### 확장성 측면에서의 이점
+
+1. AB 테스팅 시나리오 대응
+```tsx
+// 다양한 실험 그룹을 쉽게 추가 가능
+<SwitchCase
+  value={experimentGroup}
+  cases={{
+    control: <StandardLayout />,
+    variant_a: <NewLayout />,
+    variant_b: <ExperimentalLayout />,
+    variant_c: <BoldLayout />,
+  }}
+  default={<StandardLayout />}
+/>
+```
+
+2. 복잡한 피처 플래그 조합 처리
+```tsx
+// 피처 플래그 조합을 키로 사용
+const featureKey = `${hasNewUI}_${hasAdvancedFeatures}_${userTier}`;
+
+<SwitchCase
+  value={featureKey}
+  cases={{
+    'true_true_premium': <PremiumAdvancedUI />,
+    'true_false_premium': <PremiumBasicUI />,
+    'false_true_premium': <LegacyAdvancedUI />,
+    'true_true_standard': <StandardAdvancedUI />,
+  }}
+  default={<LegacyBasicUI />}
+/>
+```
+
+3. 사용자 세그먼트별 개인화
+```tsx
+// 사용자 특성에 따른 다양한 경험 제공
+<SwitchCase
+  value={userSegment}
+  cases={{
+    new_user: <OnboardingView />,
+    power_user: <AdvancedDashboard />,
+    enterprise: <EnterpriseView />,
+    mobile_first: <MobileOptimizedView />,
+  }}
+  default={<StandardView />}
+/>
+```
+
+<br>
+
+#### 개발자 경험 개선 효과
+|측면|기존 방식|리팩토링 후|
+|---|---------|---------|
+|새 조건 추가|컴포넌트 로직 수정|`cases` 객체에 케이스만 추가|
+|조건 제거|if-else 구조 재작성|해당 케이스만 삭제|
+|기본값 처리|마지막 return문으로 처리|`default` prop으로 명시적 처리|
+|타입 안정성|수동 타입 체크 필요|제네릭으로 자동 타입 추론|
+|가독성|중첩 조건문으로 복잡|선언적 객체 구조로 직관적|
+
+<br>
+
+#### 결론
+단순해 보이는 조건부 렌더링 리팩토링이지만, 이는 다음과 같은 더 큰 아키텍처 철학을 반영합니다.
+- **확장성 우선 설계** : 추후 요구사항 변화에 유연하게 대응
+- **선언적 프로그래밍** : 무엇을 렌더링할지에 집중, 어떻게 렌더링할지는 추상화
+- **타입 안정성** : 컴파일 타임에 오류를 잡아내는 견고한 구조
+- **개발자 경험** : 새로운 기능 추가 시 최소한의 코드 변경으로 최대 효과
+
+이러한 접근 방식은 특히 빠르게 변화하는 비즈니스 요구사항과
+<br>다양한 사용자 테스트가 필요한 웹 애플리케이션에서 도움이 될 수 있을 것으로 생각합니다.
 
 <br>
 <br>
