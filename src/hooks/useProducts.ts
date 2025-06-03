@@ -1,5 +1,5 @@
 import { productService } from '@/services/productService';
-import { AddProductRequestBody, Product } from '@/types/product';
+import { AddProductRequestBody } from '@/types/product';
 import { useMutation, useQuery } from '@tanstack/react-query';
 
 export function useGetProducts(limit: number = 20) {
